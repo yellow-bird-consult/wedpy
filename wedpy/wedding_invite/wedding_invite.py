@@ -45,7 +45,7 @@ class WeddingInvite:
             data = yaml.safe_load(f)
         return cls(build_dicts=data.get('builds', []),
                    init_build_dicts=data.get('init_builds', []),
-                   package_name=data.get['package_name'])
+                   package_name=data['package_name'])
 
 
 if __name__ == '__main__':

@@ -18,13 +18,13 @@ class Build:
         docker_client = docker.from_env()
         docker_client.images.pull(self.core_unit.image_url)
 
-    def build_image(self, venue_path: str, tag: Optional[str], remote: bool = False) -> None:
+    def build_image(self, package_root: str, tag: Optional[str], remote: bool = False) -> None:
 
         if self.core_unit.git_url is None or remote is True:
             self.pull_image()
             return None
 
-        build_context_path = str(os.path.join(venue_path, self.core_unit.name, self.core_unit.build_root))
+        build_context_path = str(os.path.join(package_root, self.core_unit.build_root))
 
         if self.core_unit.build_lock is True:
             dockerfile_path = "Dockerfile"

@@ -18,7 +18,6 @@ class SeatingPlan:
         self.local_wedding_invite: WeddingInvite = WeddingInvite.from_yaml(filename=local_wedding_invite_path)
         self.client = docker.from_env()
         self.network = None
-        self.invites: Optional[List[WeddingInvite]] = None
         self.full_venue_path: str = str(os.path.join(os.getcwd(), self.venue))
 
     @staticmethod
@@ -26,8 +25,9 @@ class SeatingPlan:
         with open(config_file) as f:
             return yaml.safe_load(f)
 
-    def get_invites(self) -> None:
-        self.invites = [depencency.get_wedding_invite(venue_path=self.venue) for depencency in self.dependencies]
+    @property
+    def invites(self) -> List[WeddingInvite]:
+        return [depencency.get_wedding_invite(venue_path=self.venue) for depencency in self.dependencies]
 
     def create_network(self) -> None:
         self.network = self.client.networks.create(self.network_name)
@@ -62,8 +62,9 @@ class SeatingPlan:
             dependency.clone_repo(venue_path=self.full_venue_path)
 
     def build(self, remote: bool = False) -> None:
-        full_path = str(os.getcwd())
-        path = str(os.path.join(*full_path.split("/")[0:-2]))
-        self.local_wedding_invite.build_images(venue_path=path, remote=False)
+        # full_path = str(os.getcwd())
+        # path = str(os.path.join(*full_path.split("/")[0:-2]))
+        self.local_wedding_invite.guest = False
+        self.local_wedding_invite.build_images(venue_path=".", remote=False)
         for invite in self.invites:
             invite.build_images(venue_path=self.full_venue_path, remote=remote)

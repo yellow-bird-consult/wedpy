@@ -1,3 +1,4 @@
+import os
 import time
 from typing import List
 
@@ -9,15 +10,21 @@ from wedpy.wedding_invite.build import Build
 
 
 class WeddingInvite:
-    def __init__(self, build_dicts: List[dict], init_build_dicts: List[dict]) -> None:
+    def __init__(self, build_dicts: List[dict], init_build_dicts: List[dict], package_name: str) -> None:
         self.builds: List[Build] = [Build(unit=CoreUnit.from_dict(b)) for b in build_dicts]
         self.init_builds: List[Build] = [Build(unit=CoreUnit.from_dict(b)) for b in init_build_dicts]
+        self.package_name: str = package_name
+        self.guest: bool = True
 
     def build_images(self, venue_path: str, remote: bool = False) -> None:
+        if self.guest is True:
+            package_root = str(os.path.join(venue_path, self.package_name))
+        else:
+            package_root = "."
         for build in self.builds:
-            build.build_image(venue_path=venue_path, tag=None, remote=remote)
+            build.build_image(package_root=package_root, tag=None, remote=remote)
         for build in self.init_builds:
-            build.build_image(venue_path=venue_path, tag=None, remote=remote)
+            build.build_image(package_root=package_root, tag=None, remote=remote)
 
     def run_containers(self, runner: ContainerCollection, network_name: str) -> None:
         for build in self.builds:
@@ -36,11 +43,12 @@ class WeddingInvite:
     def from_yaml(cls, filename: str) -> "WeddingInvite":
         with open(filename, 'r') as f:
             data = yaml.safe_load(f)
-        return cls(data.get('builds', []), data.get('init_builds', []))
+        return cls(build_dicts=data.get('builds', []),
+                   init_build_dicts=data.get('init_builds', []),
+                   package_name=data.get['package_name'])
 
 
 if __name__ == '__main__':
-    from wedpy.seating_plan.seating_plan import SeatingPlan
     import docker
     invite = WeddingInvite.from_yaml('../../tests/assets/wedding_invite.yml')
     network_name = 'my-network'

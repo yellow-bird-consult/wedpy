@@ -34,11 +34,18 @@ class CoreUnit:
         default_image_tag: str = build_dict['default_image_tag']
         build_root: Optional[str] = build_dict.get('build_root')
         build_files: Optional[str] = build_dict.get('build_files')
-        build_lock: bool = build_dict.get('build_lock', False)
+        build_lock = build_dict.get('build_lock', False)
         config: Dict[str, str] = build_dict.get('config', {})
         outside_port: Optional[int] = build_dict.get('outside_port')
         inside_port: Optional[int] = build_dict.get('inside_port')
         default_container_name: str = build_dict['default_container_name']
+
+        if build_lock is not False:
+            if build_lock.upper() == "TRUE":
+                build_lock = True
+            else:
+                build_lock = False
+
         return cls(name, git_url, image_url, branch, default_image_tag,
                    build_root, build_files, build_lock, config,
                    outside_port, inside_port, default_container_name)

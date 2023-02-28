@@ -37,10 +37,11 @@ class SeatingPlan:
             self.client.networks.create(self.network_name)
             return self.client.networks.get(self.network_name)
 
-    def create_network(self) -> None:
-        self.network = self.client.networks.create(self.network_name)
+    # def create_network(self) -> None:
+    #     self.network = self.client.networks.create(self.network_name)
 
     def run_containers(self) -> None:
+        _ = self.network
         self.local_wedding_invite.run_containers(runner=self.client.containers, network_name=self.network_name)
         for invite in self.invites:
             invite.run_containers(runner=self.client.containers, network_name=self.network_name)

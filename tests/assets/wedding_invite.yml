@@ -1,0 +1,41 @@
+builds:
+  - name: taxonomist
+    default_image_name: taxonomist
+    default_container_name: taxonomist
+    git_url: https://github.com/yellow-bird-consult/taxonomist.git
+    image_url: yellowbirdconsulting/taxonomy-server
+    branch: development
+    default_image_tag: taxonomist
+    build_root: "."
+    outside_port: 8012
+    inside_port: 8012
+    build_files:
+      x86_64: builds/Dockerfile.x86_64
+      arm: builds/Dockerfile.aarch64
+
+  - name: taxonomist_postgres
+    default_image_name: postgres
+    default_container_name: taxonomist_postgres
+    image_url: "postgres"
+    default_image_tag: postgres
+    outside_port: 5433
+    inside_port: 5432
+    config:
+      POSTGRES_USER: username
+      POSTGRES_DB: records
+      POSTGRES_PASSWORD: password
+
+init_builds:
+  - name: taxonomist
+    default_image_name: taxonomist_db_init
+    default_container_name: taxonomist_db_init
+    git_url: https://github.com/yellow-bird-consult/taxonomist.git
+    image_url: yellowbirdconsulting/taxonomy-migrations
+    branch: development
+    default_image_tag: taxonomist_init_db
+    build_root: "./database"
+    config:
+      DATABASE_URL: postgres://username:password@taxonomist_postgres:5432/records
+    build_files:
+      x86_64: builds/Dockerfile.x86_64
+      arm: builds/Dockerfile.aarch64

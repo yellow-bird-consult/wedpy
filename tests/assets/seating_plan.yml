@@ -1,0 +1,8 @@
+network_name: test_network
+venue: ../../sandbox/
+attendees:
+  - name: taxonomist
+    default_image_name: taxonomist
+    git_url: https://github.com/yellow-bird-consult/taxonomist.git
+    image_url: yellowbirdconsulting/taxonomy-server
+    branch: development

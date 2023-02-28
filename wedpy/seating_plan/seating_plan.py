@@ -62,6 +62,8 @@ class SeatingPlan:
             dependency.clone_repo(venue_path=self.full_venue_path)
 
     def build(self, remote: bool = False) -> None:
-        self.local_wedding_invite.build_images(venue_path=str(os.getcwd()), remote=False)
+        full_path = str(os.getcwd())
+        path = str(os.path.join(*full_path.split("/")[0:-2]))
+        self.local_wedding_invite.build_images(venue_path=path, remote=False)
         for invite in self.invites:
             invite.build_images(venue_path=self.full_venue_path, remote=remote)

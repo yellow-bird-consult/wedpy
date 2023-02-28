@@ -17,7 +17,8 @@ setup(
     },
     install_requires=[
         'PyYAML==6.0',
-        'docker==6.0.1'
+        'docker==6.0.1',
+        'tqdm==4.64.1'
     ],
     package_data={'': ['*.yml']}
 )

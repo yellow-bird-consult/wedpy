@@ -4,6 +4,7 @@ from typing import List
 
 import yaml
 from docker.client import ContainerCollection
+from tqdm import tqdm
 
 from wedpy.core_unit import CoreUnit
 from wedpy.wedding_invite.build import Build
@@ -21,9 +22,9 @@ class WeddingInvite:
             package_root = str(os.path.join(venue_path, self.package_name))
         else:
             package_root = "."
-        for build in self.builds:
+        for build in tqdm(self.builds, desc=f"{self.package_name} builds", unit="item"):
             build.build_image(package_root=package_root, tag=None, remote=remote)
-        for build in self.init_builds:
+        for build in tqdm(self.init_builds, desc=f"{self.package_name} init builds", unit="item"):
             build.build_image(package_root=package_root, tag=None, remote=remote)
 
     def run_containers(self, runner: ContainerCollection, network_name: str) -> None:

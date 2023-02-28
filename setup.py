@@ -7,13 +7,16 @@ setup(
     packages=find_packages(exclude=('tests', 'tests.*', 'tests.*.*')),
     entry_points={
         'console_scripts': [
-            # 'halfloop-install = runner.entry_points.install:main',
-            # 'halfloop-run = runner.entry_points.run_services:main',
-            # 'halfloop-wipe = runner.entry_points.wipe_repos:main',
+            'wedpy-teardown = wedpy.endpoints.teardown:main',
+            'wedpy-stop = wedpy.endpoints.stop:main',
+            'wedpy-install = wedpy.endpoints.install:main',
+            'wedpy-run = wedpy.endpoints.run:main',
+            'wedpy-build = wedpy.endpoints.build:main',
         ]
     },
     install_requires=[
         'PyYAML==6.0',
+        'docker==6.0.1'
     ],
     package_data={'': ['*.yml']}
 )

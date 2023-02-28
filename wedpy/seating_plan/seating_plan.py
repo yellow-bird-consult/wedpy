@@ -1,3 +1,4 @@
+import os
 from typing import List, Optional
 
 import docker
@@ -9,14 +10,16 @@ from wedpy.wedding_invite.wedding_invite import WeddingInvite
 
 
 class SeatingPlan:
-    def __init__(self, config_file: str) -> None:
-        self.config: dict = self.load_config(config_file)
+    def __init__(self, seating_plan_path: str, local_wedding_invite_path: str) -> None:
+        self.config: dict = self.load_config(seating_plan_path)
         self.network_name: str = self.config['network_name']
         self.venue: str = self.config['venue']
         self.dependencies: List[Dependency] = [Dependency(**dep) for dep in self.config['attendees']]
+        self.local_wedding_invite: WeddingInvite = WeddingInvite.from_yaml(filename=local_wedding_invite_path)
         self.client = docker.from_env()
         self.network = None
         self.invites: Optional[List[WeddingInvite]] = None
+        self.full_venue_path: str = str(os.path.join(os.getcwd(), self.venue))
 
     @staticmethod
     def load_config(config_file) -> dict:
@@ -52,8 +55,9 @@ class SeatingPlan:
 
     def install(self) -> None:
         for dependency in self.dependencies:
-            dependency.clone_repo(venue_path=self.venue)
+            dependency.clone_repo(venue_path=self.full_venue_path)
 
-    def build(self) -> None:
+    def build(self, remote: bool = False) -> None:
+        self.local_wedding_invite.build_images(venue_path=self.full_venue_path, remote=False)
         for invite in self.invites:
-            invite.build_images(venue_path=self.venue)
+            invite.build_images(venue_path=self.full_venue_path, remote=remote)

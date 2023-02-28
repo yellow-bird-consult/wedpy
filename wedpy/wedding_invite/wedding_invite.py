@@ -13,11 +13,11 @@ class WeddingInvite:
         self.builds: List[Build] = [Build(unit=CoreUnit.from_dict(b)) for b in build_dicts]
         self.init_builds: List[Build] = [Build(unit=CoreUnit.from_dict(b)) for b in init_build_dicts]
 
-    def build_images(self, venue_path: str) -> None:
+    def build_images(self, venue_path: str, remote: bool = False) -> None:
         for build in self.builds:
-            build.build_image(venue_path=venue_path, tag=None)
+            build.build_image(venue_path=venue_path, tag=None, remote=remote)
         for build in self.init_builds:
-            build.build_image(venue_path=venue_path, tag=None)
+            build.build_image(venue_path=venue_path, tag=None, remote=remote)
 
     def run_containers(self, runner: ContainerCollection, network_name: str) -> None:
         for build in self.builds:

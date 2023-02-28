@@ -12,6 +12,7 @@ setup(
             'wedpy-install = wedpy.endpoints.install:main',
             'wedpy-run = wedpy.endpoints.run:main',
             'wedpy-build = wedpy.endpoints.build:main',
+            'wedpy-wipe = wedpy.endpoints.wipe:main',
         ]
     },
     install_requires=[

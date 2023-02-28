@@ -4,6 +4,7 @@ from typing import Optional
 
 import docker
 from docker.client import ContainerCollection
+from docker.errors import ImageNotFound
 
 from wedpy.core_unit import CoreUnit
 
@@ -42,6 +43,20 @@ class Build:
             dockerfile=dockerfile_path,
             tag=image_tag
         )
+
+    def delete_container(self, runner: ContainerCollection) -> None:
+        container = runner.get(self.core_unit.default_container_name)
+        if container is not None:
+            container.remove(force=True)
+
+    def delete_image(self) -> None:
+        client = docker.from_env()
+        try:
+            image = client.images.get(self.core_unit.default_container_name)
+            client.images.remove(image.id, force=True)
+            print(f"{self.core_unit.default_container_name} deleted successfully.")
+        except ImageNotFound as e:
+            print(f"Error deleting {self.core_unit.default_container_name}: {e}")
 
     def run_container(self, runner: ContainerCollection, network_name: str) -> None:
         if self.core_unit.outside_port is None:

@@ -26,6 +26,12 @@ class WeddingInvite:
         for build in self.init_builds:
             build.run_container(runner=runner, network_name=network_name)
 
+    def wipe_images(self) -> None:
+        for build in self.builds:
+            build.delete_image()
+        for build in self.init_builds:
+            build.delete_image()
+
     @classmethod
     def from_yaml(cls, filename: str) -> "WeddingInvite":
         with open(filename, 'r') as f:

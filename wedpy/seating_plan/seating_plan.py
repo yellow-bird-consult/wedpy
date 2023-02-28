@@ -53,6 +53,10 @@ class SeatingPlan:
     def destroy_network(self) -> None:
         self.network.remove()
 
+    def wipe_images(self) -> None:
+        for invite in self.invites:
+            invite.wipe_images()
+
     def install(self) -> None:
         for dependency in self.dependencies:
             dependency.clone_repo(venue_path=self.full_venue_path)

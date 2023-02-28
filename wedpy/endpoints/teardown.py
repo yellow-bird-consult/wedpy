@@ -13,14 +13,3 @@ def main() -> None:
     )
     seating_plan.destroy_containers()
     seating_plan.destroy_network()
-
-
-if __name__ == "__main__":
-    from tqdm import tqdm
-    import time
-
-    my_list = [1, 2, 3, 4, 5]
-
-    for item in tqdm(my_list, desc="Processing items", unit="item"):
-        # Perform lengthy action on each item
-        time.sleep(1)  # Simulate lengthy action

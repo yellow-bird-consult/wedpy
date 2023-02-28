@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 from wedpy.core_unit import CoreUnit
 from wedpy.wedding_invite.build import Build
+import docker
 
 
 class WeddingInvite:
@@ -28,11 +29,18 @@ class WeddingInvite:
             build.build_image(package_root=package_root, tag=None, remote=remote)
 
     def run_containers(self, runner: ContainerCollection, network_name: str) -> None:
-        for build in self.builds:
+        for build in tqdm(self.builds, desc=f"{self.package_name} running containers", unit="item"):
             build.run_container(runner=runner, network_name=network_name)
         time.sleep(10)
-        for build in self.init_builds:
+        for build in tqdm(self.init_builds, desc=f"{self.package_name} running init containers", unit="item"):
             build.run_container(runner=runner, network_name=network_name)
+
+    def destroy_init_containers(self) -> None:
+        client = docker.from_env()
+        for build in self.init_builds:
+            container = client.containers.get(build.core_unit.default_container_name)
+            container.remove(force=True)
+            print(f"{build.core_unit.default_container_name} destroyed successfully.")
 
     def wipe_images(self) -> None:
         for build in self.builds:
@@ -47,36 +55,3 @@ class WeddingInvite:
         return cls(build_dicts=data.get('builds', []),
                    init_build_dicts=data.get('init_builds', []),
                    package_name=data['package_name'])
-
-
-if __name__ == '__main__':
-    import docker
-    invite = WeddingInvite.from_yaml('../../tests/assets/wedding_invite.yml')
-    network_name = 'my-network'
-
-    # The name of the image to use for the database container
-    db_image_name = 'postgres:latest'
-
-    # The name to give the new database container
-    db_container_name = 'my-db-container'
-
-    # The name of the image to use for the app container
-    app_image_name = 'my-app-image:latest'
-
-    # The name to give the new app container
-    app_container_name = 'my-app-container'
-
-    # The Docker client
-    docker_client = docker.from_env()
-
-    # Create a new network for the containers to connect to
-    network = docker_client.networks.create(network_name)
-
-    invite.run_containers(runner=docker_client.containers, network_name=network_name)
-    # print(os.getcwd())
-    # invite.build_images('../../sandbox/')
-    # print(invite.builds[0].core_unit.git_url)
-    # for i in invite.builds:
-    #     print(i)
-    # print(invite.builds)
-    # print(invite.init_builds)

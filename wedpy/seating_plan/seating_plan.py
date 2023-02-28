@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional
+from typing import List
 
 import docker
 import yaml
@@ -37,9 +37,6 @@ class SeatingPlan:
             self.client.networks.create(self.network_name)
             return self.client.networks.get(self.network_name)
 
-    # def create_network(self) -> None:
-    #     self.network = self.client.networks.create(self.network_name)
-
     def run_containers(self) -> None:
         _ = self.network
         self.local_wedding_invite.run_containers(runner=self.client.containers, network_name=self.network_name)
@@ -55,6 +52,9 @@ class SeatingPlan:
             container.stop()
             container.remove()
             print(f"{container.name} destroyed successfully.")
+        self.local_wedding_invite.destroy_init_containers()
+        for invite in self.invites:
+            invite.destroy_init_containers()
 
     def destroy_network(self) -> None:
         self.network.remove()
@@ -69,8 +69,6 @@ class SeatingPlan:
             dependency.clone_repo(venue_path=self.full_venue_path)
 
     def build(self, remote: bool = False) -> None:
-        # full_path = str(os.getcwd())
-        # path = str(os.path.join(*full_path.split("/")[0:-2]))
         self.local_wedding_invite.guest = False
         self.local_wedding_invite.build_images(venue_path=".", remote=False)
         for invite in self.invites:

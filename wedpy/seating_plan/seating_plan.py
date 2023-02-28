@@ -39,6 +39,7 @@ class SeatingPlan:
             self.create_network()
 
     def run_containers(self) -> None:
+        self.local_wedding_invite.run_containers(runner=self.client.containers, network_name=self.network_name)
         for invite in self.invites:
             invite.run_containers(runner=self.client.containers, network_name=self.network_name)
 
@@ -54,6 +55,7 @@ class SeatingPlan:
         self.network.remove()
 
     def wipe_images(self) -> None:
+        self.local_wedding_invite.wipe_images()
         for invite in self.invites:
             invite.wipe_images()
 

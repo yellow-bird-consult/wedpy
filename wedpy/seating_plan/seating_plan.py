@@ -17,7 +17,7 @@ class SeatingPlan:
         self.dependencies: List[Dependency] = [Dependency(**dep) for dep in self.config['attendees']]
         self.local_wedding_invite: WeddingInvite = WeddingInvite.from_yaml(filename=local_wedding_invite_path)
         self.client = docker.from_env()
-        self.network = None
+        # self.network = None
         self.full_venue_path: str = str(os.path.join(os.getcwd(), self.venue))
 
     @staticmethod
@@ -29,14 +29,16 @@ class SeatingPlan:
     def invites(self) -> List[WeddingInvite]:
         return [depencency.get_wedding_invite(venue_path=self.venue) for depencency in self.dependencies]
 
+    @property
+    def network(self):
+        try:
+            return self.client.networks.get(self.network_name)
+        except NotFound:
+            self.client.networks.create(self.network_name)
+            return self.client.networks.get(self.network_name)
+
     def create_network(self) -> None:
         self.network = self.client.networks.create(self.network_name)
-
-    def get_network(self) -> None:
-        try:
-            self.network = self.client.networks.get(self.network_name)
-        except NotFound:
-            self.create_network()
 
     def run_containers(self) -> None:
         self.local_wedding_invite.run_containers(runner=self.client.containers, network_name=self.network_name)

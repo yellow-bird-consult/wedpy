@@ -52,7 +52,9 @@ class SeatingPlan:
 
     def destroy_containers(self) -> None:
         for container in self.network.containers:
+            container.stop()
             container.remove()
+            print(f"{container.name} destroyed successfully.")
 
     def destroy_network(self) -> None:
         self.network.remove()

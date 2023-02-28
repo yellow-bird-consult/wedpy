@@ -52,7 +52,7 @@ class Build:
     def delete_image(self) -> None:
         client = docker.from_env()
         try:
-            image = client.images.get(self.core_unit.default_container_name)
+            image = client.images.get(self.core_unit.default_image_tag)
             client.images.remove(image.id, force=True)
             print(f"{self.core_unit.default_container_name} deleted successfully.")
         except ImageNotFound as e:

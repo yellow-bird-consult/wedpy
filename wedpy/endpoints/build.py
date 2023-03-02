@@ -26,6 +26,6 @@ def main() -> None:
 
     seating_plan = SeatingPlan(seating_plan_path=seating_plan_path)
     if remote is True:
-        seating_plan.venue = seating_plan.post_office_path
+        seating_plan.venue = seating_plan.full_post_office_path
         seating_plan.full_venue_path = seating_plan.full_post_office_path
     seating_plan.build(remote=remote)

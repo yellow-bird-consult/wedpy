@@ -24,7 +24,8 @@ class CoreUnit:
     def __init__(self, name: str, git_url: str, image_url: str, branch: str,
                  default_image_tag: str, build_root: str, build_files: Optional[Dict[str, str]],
                  build_lock: bool, config: Dict[str, str],
-                 outside_port: Optional[int], inside_port: Optional[int], default_container_name: str) -> None:
+                 outside_port: Optional[int], inside_port: Optional[int],
+                 default_container_name: str, main: bool) -> None:
         """
         The constructor for the CoreUnit class.
 
@@ -40,6 +41,7 @@ class CoreUnit:
         :param outside_port: the port to be exposed on the host machine
         :param inside_port: the port to be exposed on the container
         :param default_container_name: the default name of the container
+        :param main: whether or not this is the main build
         """
         self.name: str = name
         self.git_url: str = git_url
@@ -53,6 +55,7 @@ class CoreUnit:
         self.outside_port: Optional[int] = outside_port
         self.inside_port: Optional[int] = inside_port
         self.default_container_name: str = default_container_name
+        self.main: bool = main
 
     def __str__(self):
         return f"Name: {self.name}\nGit URL: {self.git_url}\nImage URL: {self.image_url}\n" \
@@ -80,7 +83,8 @@ class CoreUnit:
         outside_port: Optional[int] = build_dict.get('outside_port')
         inside_port: Optional[int] = build_dict.get('inside_port')
         default_container_name: str = build_dict['default_container_name']
+        main: bool = build_dict.get('main', False)
 
         return cls(name, git_url, image_url, branch, default_image_tag,
                    build_root, build_files, build_lock, config,
-                   outside_port, inside_port, default_container_name)
+                   outside_port, inside_port, default_container_name, main)

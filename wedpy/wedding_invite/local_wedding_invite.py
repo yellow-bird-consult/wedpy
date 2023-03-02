@@ -39,15 +39,15 @@ class LocalWeddingInvite:
         :return: None
         """
         package_root = "."
-        if dev is False:
-            total_builds: List[Build] = self.local_wedding_invite.builds + self.local_wedding_invite.init_builds
-        else:
-            total_builds: List[Build] = self.local_wedding_invite.init_builds
+        total_builds: List[Build] = self.local_wedding_invite.builds + self.local_wedding_invite.init_builds
 
         with Pool(processes=self.num_processes) as pool:
             results = []
             for build in total_builds:
-                results.append(pool.apply_async(build.build_image, args=(package_root, None, False)))
+                if dev is True and build.core_unit.main is True:
+                    continue
+                else:
+                    results.append(pool.apply_async(build.build_image, args=(package_root, None, False)))
 
             # Wait for all processes to finish
             for result in tqdm(results, desc=f"{self.local_wedding_invite.package_name} builds", unit="item",
@@ -64,7 +64,11 @@ class LocalWeddingInvite:
         :return:
         """
         if dev is True:
-            self.local_wedding_invite.builds = []
+            buffer = []
+            for build in self.local_wedding_invite.builds:
+                if build.core_unit.main is False:
+                    buffer.append(build)
+            self.local_wedding_invite.builds = buffer
         self.local_wedding_invite.run_containers(runner=runner, network_name=network_name)
 
     def destroy_init_containers(self) -> None:

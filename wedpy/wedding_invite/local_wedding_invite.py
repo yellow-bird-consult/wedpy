@@ -40,18 +40,19 @@ class LocalWeddingInvite:
         """
         package_root = "."
         total_builds: List[Build] = self.local_wedding_invite.builds + self.local_wedding_invite.init_builds
+        total_num = len(total_builds)
 
         with Pool(processes=self.num_processes) as pool:
             results = []
             for build in total_builds:
                 if dev is True and build.core_unit.main is True:
-                    continue
+                    total_num -= 1
                 else:
                     results.append(pool.apply_async(build.build_image, args=(package_root, None, False)))
 
             # Wait for all processes to finish
             for result in tqdm(results, desc=f"{self.local_wedding_invite.package_name} builds", unit="item",
-                               total=len(total_builds)):
+                               total=total_num):
                 result.get()
 
     def run_containers(self, runner: ContainerCollection, network_name: str, dev: bool = False) -> None:

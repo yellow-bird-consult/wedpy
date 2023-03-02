@@ -1,3 +1,6 @@
+"""
+This file defines the SeatingPlan class for managing dependencies needed to run a service.
+"""
 import os
 from typing import List
 
@@ -10,18 +13,39 @@ from wedpy.wedding_invite.wedding_invite import WeddingInvite
 
 
 class SeatingPlan:
-    def __init__(self, seating_plan_path: str, local_wedding_invite_path: str) -> None:
+    """
+    The SeatingPlan class is used to manage dependencies needed to run a service.
+
+    Attributes:
+        network_name (str): the name of the network to manage the docker containers for service
+        venue (str): the path to where the cloned dependency repos will be stored
+        dependencies (List[Dependency]): the list of dependencies needed to run the service
+        client (docker.client.DockerClient): the docker client used to manage the docker containers and builds
+        full_venue_path (str): the full path to the venue directory
+    """
+    def __init__(self, seating_plan_path: str) -> None:
+        """
+        The constructor for the SeatingPlan class.
+
+        :param seating_plan_path: the path to the seating plan file.
+        """
         self.config: dict = self.load_config(seating_plan_path)
         self.network_name: str = self.config['network_name']
         self.venue: str = self.config['venue']
-        self.dependencies: List[Dependency] = [Dependency(**dep) for dep in self.config['attendees']]
-        self.local_wedding_invite: WeddingInvite = WeddingInvite.from_yaml(filename=local_wedding_invite_path)
+        self.dependencies: List[Dependency] = [Dependency(
+            name=dep["name"], default_image_name=dep["default_image_name"],
+            git_url=dep["git_url"], branch=dep["branch"], image_url=dep["image_url"]) for dep in self.config['attendees']]
         self.client = docker.from_env()
-        # self.network = None
         self.full_venue_path: str = str(os.path.join(os.getcwd(), self.venue))
 
     @staticmethod
     def load_config(config_file) -> dict:
+        """
+        Loads the data from the seating plan file.
+
+        :param config_file: the path to the seating plan file.
+        :return: the data from the seating plan file.
+        """
         with open(config_file) as f:
             return yaml.safe_load(f)
 
@@ -38,38 +62,69 @@ class SeatingPlan:
             return self.client.networks.get(self.network_name)
 
     def run_containers(self) -> None:
+        """
+        Runs the containers for the service.
+
+        :return: None
+        """
         _ = self.network
-        self.local_wedding_invite.run_containers(runner=self.client.containers, network_name=self.network_name)
         for invite in self.invites:
             invite.run_containers(runner=self.client.containers, network_name=self.network_name)
 
     def stop_containers(self) -> None:
+        """
+        Stops the containers belonging to the network.
+
+        :return: None
+        """
         for container in self.network.containers:
             container.stop()
 
     def destroy_containers(self) -> None:
+        """
+        Destroys the containers belonging to the network.
+
+        :return: None
+        """
         for container in self.network.containers:
             container.stop()
-            container.remove()
+            container.remove(force=True)
             print(f"{container.name} destroyed successfully.")
-        self.local_wedding_invite.destroy_init_containers()
         for invite in self.invites:
             invite.destroy_init_containers()
 
     def destroy_network(self) -> None:
+        """
+        Destroys the network.
+
+        :return: None
+        """
         self.network.remove()
 
     def wipe_images(self) -> None:
-        self.local_wedding_invite.wipe_images()
+        """
+        Removes the images belonging to the network.
+
+        :return: None
+        """
         for invite in self.invites:
             invite.wipe_images()
 
     def install(self) -> None:
+        """
+        Clones all the dependencies in the seating plan.
+
+        :return: None
+        """
         for dependency in self.dependencies:
             dependency.clone_repo(venue_path=self.full_venue_path)
 
     def build(self, remote: bool = False) -> None:
-        self.local_wedding_invite.guest = False
-        self.local_wedding_invite.build_images(venue_path=".", remote=False)
+        """
+        Builds the images for the dependencies in the seating plan.
+
+        :param remote: if True, the images will be pulled from DockerHub as opposed to building locally.
+        :return: None
+        """
         for invite in self.invites:
             invite.build_images(venue_path=self.full_venue_path, remote=remote)

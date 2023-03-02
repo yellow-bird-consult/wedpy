@@ -78,7 +78,7 @@ class SeatingPlan:
             dst_path = os.path.join(dst_folder, "wedding_invite.yml")
             shutil.copy(dependency.invite_path(venue_path=self.full_venue_path), dst_path)
 
-    def run_containers(self) -> None:
+    def run_containers(self, remote: bool = False) -> None:
         """
         Runs the containers for the service.
 
@@ -86,7 +86,7 @@ class SeatingPlan:
         """
         _ = self.network
         for invite in self.invites:
-            invite.run_containers(runner=self.client.containers, network_name=self.network_name)
+            invite.run_containers(runner=self.client.containers, network_name=self.network_name, remote=remote)
 
     def stop_containers(self) -> None:
         """

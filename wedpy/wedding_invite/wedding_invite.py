@@ -58,7 +58,7 @@ class WeddingInvite:
                                total=len(total_builds)):
                 result.get()
 
-    def run_containers(self, runner: ContainerCollection, network_name: str) -> None:
+    def run_containers(self, runner: ContainerCollection, network_name: str, remote: bool = False) -> None:
         """
         Runs the containers defined in the wedding invite.
 
@@ -67,10 +67,10 @@ class WeddingInvite:
         :return: None
         """
         for build in tqdm(self.builds, desc=f"{self.package_name} running containers", unit="item"):
-            build.run_container(runner=runner, network_name=network_name)
+            build.run_container(runner=runner, network_name=network_name, remote=remote)
         time.sleep(10)
         for build in tqdm(self.init_builds, desc=f"{self.package_name} running init containers", unit="item"):
-            build.run_container(runner=runner, network_name=network_name)
+            build.run_container(runner=runner, network_name=network_name, remote=remote)
 
     def destroy_init_containers(self) -> None:
         """

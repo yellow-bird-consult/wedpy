@@ -22,7 +22,7 @@ def main() -> None:
     if remote is True:
         seating_plan.venue = seating_plan.post_office_path
         seating_plan.full_venue_path = seating_plan.full_post_office_path
-    seating_plan.run_containers()
+    seating_plan.run_containers(remote=remote)
 
     local_wedding_invite = LocalWeddingInvite(local_wedding_invite_path=local_wedding_invite_path)
     local_wedding_invite.run_containers(

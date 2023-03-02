@@ -105,7 +105,7 @@ class Build:
         if self.core_unit.outside_port is None:
             ports = None
         else:
-            ports = {f'{self.core_unit.outside_port}/tcp': ('0.0.0.0', self.core_unit.inside_port)}
+            ports = {f'{self.core_unit.inside_port}/tcp': ('0.0.0.0', self.core_unit.outside_port)}
         runner.run(
             image=self.core_unit.default_image_tag,
             environment=self.core_unit.config,

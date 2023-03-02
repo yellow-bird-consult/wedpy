@@ -20,6 +20,7 @@ class CoreUnit:
         config (Dict[str, str]): a map of configuration options for the build to be passed into the docker build
         outside_port (int): the port to be exposed on the host machine
         inside_port (int): the port to be exposed on the container
+        main (bool): whether or not this is the main build
     """
     def __init__(self, name: str, git_url: str, image_url: str, branch: str,
                  default_image_tag: str, build_root: str, build_files: Optional[Dict[str, str]],

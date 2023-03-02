@@ -21,9 +21,8 @@ def main() -> None:
     seating_plan_path: str = str(os.path.join(os.getcwd(), 'seating_plan.yml'))
     local_wedding_invite_path: str = str(os.path.join(os.getcwd(), 'wedding_invite.yml'))
 
-    if dev is False:
-        local_wedding_invite = LocalWeddingInvite(local_wedding_invite_path=local_wedding_invite_path)
-        local_wedding_invite.build_images()
+    local_wedding_invite = LocalWeddingInvite(local_wedding_invite_path=local_wedding_invite_path)
+    local_wedding_invite.build_images(dev=dev)
 
     seating_plan = SeatingPlan(seating_plan_path=seating_plan_path)
     seating_plan.build(remote=remote)

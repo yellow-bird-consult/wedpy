@@ -31,14 +31,18 @@ class LocalWeddingInvite:
         self.local_wedding_invite: WeddingInvite = WeddingInvite.from_yaml(filename=local_wedding_invite_path)
         self.num_processes: int = num_processes
 
-    def build_images(self) -> None:
+    def build_images(self, dev: bool = False) -> None:
         """
         Builds the docker images for the local wedding invite.
 
+        :param dev: whether or not to build the main images
         :return: None
         """
         package_root = "."
-        total_builds: List[Build] = self.local_wedding_invite.builds + self.local_wedding_invite.init_builds
+        if dev is False:
+            total_builds: List[Build] = self.local_wedding_invite.builds + self.local_wedding_invite.init_builds
+        else:
+            total_builds: List[Build] = self.local_wedding_invite.init_builds
 
         with Pool(processes=self.num_processes) as pool:
             results = []
@@ -50,14 +54,17 @@ class LocalWeddingInvite:
                                total=len(total_builds)):
                 result.get()
 
-    def run_containers(self, runner: ContainerCollection, network_name: str) -> None:
+    def run_containers(self, runner: ContainerCollection, network_name: str, dev: bool = False) -> None:
         """
         Runs the containers for the local wedding invite.
 
         :param runner: the docker client container collection
         :param network_name: the name of the docker network to connect the containers to
+        :param dev: whether or not to run the main containers
         :return:
         """
+        if dev is True:
+            self.local_wedding_invite.builds = []
         self.local_wedding_invite.run_containers(runner=runner, network_name=network_name)
 
     def destroy_init_containers(self) -> None:

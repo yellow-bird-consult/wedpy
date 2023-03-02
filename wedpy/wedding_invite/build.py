@@ -94,7 +94,7 @@ class Build:
         except ImageNotFound as e:
             print(f"Error deleting {self.core_unit.default_container_name}: {e}")
 
-    def run_container(self, runner: ContainerCollection, network_name: str) -> None:
+    def run_container(self, runner: ContainerCollection, network_name: str, remote: bool = False) -> None:
         """
         Runs the container.
 
@@ -106,8 +106,12 @@ class Build:
             ports = None
         else:
             ports = {f'{self.core_unit.inside_port}/tcp': ('0.0.0.0', self.core_unit.outside_port)}
+        if remote is True:
+            image = self.core_unit.image_url
+        else:
+            image = self.core_unit.default_image_tag
         runner.run(
-            image=self.core_unit.default_image_tag,
+            image=image,
             environment=self.core_unit.config,
             detach=True,
             network=network_name,

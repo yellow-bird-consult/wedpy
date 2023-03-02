@@ -75,7 +75,7 @@ class SeatingPlan:
             dst_folder = os.path.join(self.full_post_office_path, dependency.name)
             if not os.path.exists(dst_folder):
                 os.mkdir(dst_folder)
-            dst_path = os.path.join(dst_folder, "wedding_invite.yaml")
+            dst_path = os.path.join(dst_folder, "wedding_invite.yml")
             shutil.copy(dependency.invite_path(venue_path=self.full_venue_path), dst_path)
 
     def run_containers(self) -> None:

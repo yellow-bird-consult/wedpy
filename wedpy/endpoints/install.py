@@ -1,3 +1,6 @@
+"""
+This file defines the endpoint for wedpy-install which installs the package.
+"""
 import os
 
 from wedpy.seating_plan.seating_plan import SeatingPlan

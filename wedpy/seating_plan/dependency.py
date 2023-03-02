@@ -87,3 +87,12 @@ class Dependency:
             print(f'Error cloning {self.name}:')
             print(stdout.decode())
             print(stderr.decode())
+
+    def invite_path(self, venue_path: str) -> str:
+        """
+        Gets the path to the wedding invite of the dependency.
+
+        :param venue_path: the path to the venue directory where the dependencies are cloned to
+        :return: the path to the wedding invite of the dependency
+        """
+        return os.path.join(venue_path, self.name, 'wedding_invite.yml')

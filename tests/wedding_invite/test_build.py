@@ -133,7 +133,7 @@ class TestBuild(TestCase):
             detach=True,
             network="test_network",
             name=self.core_unit_mock.default_container_name,
-            ports={f'{self.core_unit_mock.outside_port}/tcp': ('0.0.0.0', self.core_unit_mock.inside_port)},
+            ports={f'{self.core_unit_mock.inside_port}/tcp': ('0.0.0.0', self.core_unit_mock.outside_port)},
         )
 
 

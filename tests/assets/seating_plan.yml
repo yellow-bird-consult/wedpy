@@ -1,5 +1,6 @@
 network_name: test_network
 venue: ../../sandbox/
+post_office: ../../post_office/
 attendees:
   - name: taxonomist
     default_image_name: taxonomist

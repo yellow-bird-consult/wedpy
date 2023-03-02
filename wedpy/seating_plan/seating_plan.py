@@ -3,6 +3,7 @@ This file defines the SeatingPlan class for managing dependencies needed to run 
 """
 import os
 from typing import List
+import shutil
 
 import docker
 import yaml
@@ -34,7 +35,10 @@ class SeatingPlan:
         self.venue: str = self.config['venue']
         self.dependencies: List[Dependency] = [Dependency(
             name=dep["name"], default_image_name=dep["default_image_name"],
-            git_url=dep["git_url"], branch=dep["branch"], image_url=dep["image_url"]) for dep in self.config['attendees']]
+            git_url=dep["git_url"], branch=dep["branch"],
+            image_url=dep["image_url"]) for dep in self.config['attendees']]
+        self.post_office_path: str = self.config['post_office']
+        self.full_post_office_path: str = str(os.path.join(os.getcwd(), self.config['post_office']))
         self.client = docker.from_env()
         self.full_venue_path: str = str(os.path.join(os.getcwd(), self.venue))
 
@@ -60,6 +64,19 @@ class SeatingPlan:
         except NotFound:
             self.client.networks.create(self.network_name)
             return self.client.networks.get(self.network_name)
+
+    def post_invites(self) -> None:
+        """
+        Posts the wedding invites for the dependencies to the self.post_office_path.
+
+        :return: None
+        """
+        for dependency in self.dependencies:
+            dst_folder = os.path.join(self.full_post_office_path, dependency.name)
+            if not os.path.exists(dst_folder):
+                os.mkdir(dst_folder)
+            dst_path = os.path.join(dst_folder, "wedding_invite.yaml")
+            shutil.copy(dependency.invite_path(venue_path=self.full_venue_path), dst_path)
 
     def run_containers(self) -> None:
         """

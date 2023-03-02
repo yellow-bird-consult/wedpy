@@ -13,6 +13,7 @@ setup(
             'wedpy-run = wedpy.endpoints.run:main',
             'wedpy-build = wedpy.endpoints.build:main',
             'wedpy-wipe = wedpy.endpoints.wipe_images:main',
+            'wedpy-post = wedpy.endpoints.post_invites:main',
         ]
     },
     install_requires=[

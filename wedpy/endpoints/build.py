@@ -25,4 +25,6 @@ def main() -> None:
     local_wedding_invite.build_images(dev=dev)
 
     seating_plan = SeatingPlan(seating_plan_path=seating_plan_path)
+    if remote is True:
+        seating_plan.venue = seating_plan.post_office_path
     seating_plan.build(remote=remote)

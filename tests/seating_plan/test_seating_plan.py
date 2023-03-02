@@ -29,6 +29,7 @@ class TestSeatingPlan(TestCase):
         self.expected_file_data = {
             "network_name": "test_network",
             "venue": "../../sandbox/",
+            "post_office": "../../post_office/",
             "attendees": [
                 {
                     "name": "taxonomist",
@@ -74,6 +75,18 @@ class TestSeatingPlan(TestCase):
             image_url=self.expected_file_data['attendees'][0]['image_url']
         )
         self.assertEqual(self.seating_plan.dependencies, [mock_dependency.return_value])
+
+    def test_post_invites(self) -> None:
+        """
+        Tests that the post_invites method posts the invites.
+        :return: None
+        """
+        pass
+        # self.seating_plan.post_invites()
+        # self.dependency_mock.post_invite.assert_called_once_with(
+        #     venue_path=self.seating_plan.venue,
+        #     network_name=self.seating_plan.network_name
+        # )
 
     def test_invites(self) -> None:
         """

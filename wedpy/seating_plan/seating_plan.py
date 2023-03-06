@@ -136,12 +136,16 @@ class SeatingPlan:
         for dependency in self.dependencies:
             dependency.clone_repo(venue_path=self.full_venue_path)
 
-    def build(self, remote: bool = False) -> None:
+    def build(self, remote: bool = False, pool: bool = True) -> None:
         """
         Builds the images for the dependencies in the seating plan.
 
         :param remote: if True, the images will be pulled from DockerHub as opposed to building locally.
+        :param pool: if True, the images will be built using the multiprocessing pool.
         :return: None
         """
         for invite in self.invites:
-            invite.build_images(venue_path=self.full_venue_path, remote=remote)
+            if pool is True:
+                invite.build_images(venue_path=self.full_venue_path, remote=remote)
+            else:
+                invite.build_images_without_pool(venue_path=self.full_venue_path, remote=remote)

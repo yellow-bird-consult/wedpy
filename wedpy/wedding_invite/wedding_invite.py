@@ -58,6 +58,21 @@ class WeddingInvite:
                                total=len(total_builds)):
                 result.get()
 
+    def build_images_without_pool(self, venue_path: str, remote: bool = False) -> None:
+        """
+        Builds the docker images defined in the wedding invite.
+
+        :param venue_path: the path to where the dependencies are located
+        :param remote: whether or not to pull images from the registry, if True, pull them
+        :return: None
+        """
+        package_root = str(os.path.join(venue_path, self.package_name))
+
+        total_builds: List[Build] = self.builds + self.init_builds
+
+        for build in tqdm(total_builds, desc=f"{self.package_name} builds", unit="item"):
+            build.build_image(package_root, None, remote)
+
     def run_containers(self, runner: ContainerCollection, network_name: str, remote: bool = False) -> None:
         """
         Runs the containers defined in the wedding invite.

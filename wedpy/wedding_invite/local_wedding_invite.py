@@ -55,6 +55,22 @@ class LocalWeddingInvite:
                                total=total_num):
                 result.get()
 
+    def build_images_without_pool(self, dev: bool = False) -> None:
+        """
+        Builds the docker images for the local wedding invite.
+
+        :param dev: whether or not to build the main images
+        :return: None
+        """
+        package_root = "."
+        total_builds: List[Build] = self.local_wedding_invite.builds + self.local_wedding_invite.init_builds
+
+        for build in total_builds:
+            if dev is True and build.core_unit.main is True:
+                continue
+            else:
+                build.build_image(package_root=package_root, tag=None, remote=False)
+
     def run_containers(self, runner: ContainerCollection, network_name: str, dev: bool = False) -> None:
         """
         Runs the containers for the local wedding invite.

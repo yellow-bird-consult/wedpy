@@ -12,17 +12,23 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('-remote', action='store_true')
     parser.add_argument('-dev', action='store_true')
+    parser.add_argument('-no_pool', action='store_true')
 
     args = parser.parse_args()
 
-    remote = args.remote if args.remote else False
-    dev = args.dev if args.dev else False
+    remote: bool = args.remote if args.remote else False
+    dev: bool = args.dev if args.dev else False
+    pool: bool = False if args.no_pool else True
 
     seating_plan_path: str = str(os.path.join(os.getcwd(), 'seating_plan.yml'))
     local_wedding_invite_path: str = str(os.path.join(os.getcwd(), 'wedding_invite.yml'))
 
     local_wedding_invite = LocalWeddingInvite(local_wedding_invite_path=local_wedding_invite_path)
-    local_wedding_invite.build_images(dev=dev)
+
+    if pool is True:
+        local_wedding_invite.build_images(dev=dev)
+    else:
+        local_wedding_invite.build_images_without_pool(dev=dev)
 
     seating_plan = SeatingPlan(seating_plan_path=seating_plan_path)
     if remote is True:

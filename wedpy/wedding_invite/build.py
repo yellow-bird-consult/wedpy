@@ -66,7 +66,8 @@ class Build:
         image, build_logs = docker_client.images.build(
             path=build_context_path,
             dockerfile=dockerfile_path,
-            tag=image_tag
+            tag=image_tag,
+            buildargs=self.core_unit.build_args
         )
 
     def delete_container(self, runner: ContainerCollection) -> None:

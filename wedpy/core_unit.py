@@ -26,7 +26,7 @@ class CoreUnit:
                  default_image_tag: str, build_root: str, build_files: Optional[Dict[str, str]],
                  build_lock: bool, config: Dict[str, str],
                  outside_port: Optional[int], inside_port: Optional[int],
-                 default_container_name: str, main: bool) -> None:
+                 default_container_name: str, main: bool, build_args: dict) -> None:
         """
         The constructor for the CoreUnit class.
 
@@ -43,6 +43,7 @@ class CoreUnit:
         :param inside_port: the port to be exposed on the container
         :param default_container_name: the default name of the container
         :param main: whether or not this is the main build
+        :param build_args: a map of build arguments to be passed into the docker build
         """
         self.name: str = name
         self.git_url: str = git_url
@@ -57,6 +58,7 @@ class CoreUnit:
         self.inside_port: Optional[int] = inside_port
         self.default_container_name: str = default_container_name
         self.main: bool = main
+        self.build_args: dict = build_args
 
     def __str__(self):
         return f"Name: {self.name}\nGit URL: {self.git_url}\nImage URL: {self.image_url}\n" \
@@ -85,7 +87,9 @@ class CoreUnit:
         inside_port: Optional[int] = build_dict.get('inside_port')
         default_container_name: str = build_dict['default_container_name']
         main: bool = build_dict.get('main', False)
+        build_args: dict = build_dict.get('build_args', {})
 
         return cls(name, git_url, image_url, branch, default_image_tag,
                    build_root, build_files, build_lock, config,
-                   outside_port, inside_port, default_container_name, main)
+                   outside_port, inside_port, default_container_name, main,
+                   build_args)

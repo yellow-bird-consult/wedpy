@@ -6,7 +6,7 @@ who want to spin up a project with dependencies.
 ## Installation
 ```wedpy``` can be installed using pip:
 ```bash
-pip install https://github.com/yellow-bird-consult/wedpy.git
+pip install git+https://github.com/yellow-bird-consult/wedpy.git
 ```
 
 ## Packaging a Service

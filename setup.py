@@ -17,6 +17,7 @@ setup(
         ]
     },
     install_requires=[
+        'requests==2.29.0',
         'PyYAML==6.0',
         'docker==6.0.1',
         'tqdm==4.64.1'

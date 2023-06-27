@@ -92,23 +92,33 @@ Here is a breakdown of the fields in the ```wedding_invite.yml``` file:
 | build_args | A dictionary of build arguments that will be used to build the service.                          |
 
 # Using wedpy locally
-Prerequisites:
+Installing wedpy:
 
-1. Open the target repository and have docker desktop running in the background.
+1. Navigate to the root of your target repository in your terminal.
 
-2. From the repository root in your IDE, create two empty folders. One being ```sandbox``` and one being ```post_office```.
+2. Create a virtual environment with the command ```python3 -m venv venv```.
 
-3. Assuming wedpy is installed in your virtual environment, and your virtual environment is activated, navigate to the repository root in terminal and you're ready to begin.
+3. Activate that virtual environment with ```source venv/bin/activate```.
+
+4. Then install wedpy into that virtual environment by running the command ```pip install git+https://github.com/yellow-bird-consult/wedpy.git```.
+
+Prerequisites to running wedpy:
+
+1. Have docker desktop running in the background. You can install docker desktop here: ```https://www.docker.com/products/docker-desktop/```.
+
+2. Open your repository in your IDE. Create two empty folders. One titled ```sandbox``` and one titled ```post_office```.
 
 Running wedpy:
 
-1. Run the command ```wedpy-install```.
+Open terminal and ensure your virtual environment is activated as talked about above, and that you're in the root of your target repository in terminal. You'll then run the following commands in order:
 
-2. Run the command ```wedpy-post```.
+1. ```wedpy-install```.
 
-3. Run the command ```wedpy-build -dev -no_pool```.
+2. ```wedpy-post```.
 
-4. Run the command ```wedpy-run -dev```.
+3. ```wedpy-build -dev -no_pool```. This one will take a while.
+
+4. ```wedpy-run -dev```.
 
 Your docker images and containers will now be created, and you can stop and start them as needed in docker desktop from now on.
 

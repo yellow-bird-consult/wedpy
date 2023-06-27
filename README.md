@@ -91,3 +91,4 @@ Here is a breakdown of the fields in the ```wedding_invite.yml``` file:
 | config | A dictionary of environment variables that will be used to build the service.                    |
 | build_args | A dictionary of build arguments that will be used to build the service.                          |
 
+# Using wedpy locally

@@ -92,3 +92,38 @@ Here is a breakdown of the fields in the ```wedding_invite.yml``` file:
 | build_args | A dictionary of build arguments that will be used to build the service.                          |
 
 # Using wedpy locally
+Prerequisites:
+
+1. Open the target repository and have docker desktop running in the background.
+
+2. From the repository root in your IDE, create two empty folders. One being ```sandbox``` and one being ```post_office```.
+
+3. Assuming wedpy is installed in your virtual environment, and your virtual environment is activated, navigate to the repository root in terminal and you're ready to begin.
+
+Running wedpy:
+
+1. Run the command ```wedpy-install```.
+
+2. Run the command ```wedpy-post```.
+
+3. Run the command ```wedpy-build -dev -no_pool```.
+
+4. Run the command ```wedpy-run -dev```.
+
+Your docker images and containers will now be created, and you can stop and start them as needed in docker desktop from now on.
+
+Troubleshooting:
+
+If you get errors, or run wedpy incorrectly, it might be worth wiping everything and starting again. To do this, wipe all your docker images and containers, and wipe both the ```sandbox``` and ```post_office``` folders. Then repeat the steps above.
+
+
+
+
+
+
+
+
+
+
+
+

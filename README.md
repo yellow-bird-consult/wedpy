@@ -91,3 +91,49 @@ Here is a breakdown of the fields in the ```wedding_invite.yml``` file:
 | config | A dictionary of environment variables that will be used to build the service.                    |
 | build_args | A dictionary of build arguments that will be used to build the service.                          |
 
+# Using wedpy locally
+Installing wedpy:
+
+1. Navigate to the root of your target repository in your terminal.
+
+2. Create a virtual environment with the command ```python3 -m venv venv```.
+
+3. Activate that virtual environment with ```source venv/bin/activate```.
+
+4. Then install wedpy into that virtual environment by running the command ```pip install git+https://github.com/yellow-bird-consult/wedpy.git```.
+
+Prerequisites to running wedpy:
+
+1. Have docker desktop running in the background. You can install docker desktop here: ```https://www.docker.com/products/docker-desktop/```.
+
+2. Open your repository in your IDE. Create two empty folders. One titled ```sandbox``` and one titled ```post_office```.
+
+Running wedpy:
+
+Open terminal and ensure your virtual environment is activated as talked about above, and that you're in the root of your target repository in terminal. You'll then run the following commands in order:
+
+1. ```wedpy-install```.
+
+2. ```wedpy-post```.
+
+3. ```wedpy-build -dev -no_pool```. This one will take a while.
+
+4. ```wedpy-run -dev```.
+
+Your docker images and containers will now be created, and you can stop and start them as needed in docker desktop from now on.
+
+Troubleshooting:
+
+If you get errors, or run wedpy incorrectly, it might be worth wiping everything and starting again. To do this, wipe all your docker images and containers, and wipe both the ```sandbox``` and ```post_office``` folders. Then repeat the steps above.
+
+
+
+
+
+
+
+
+
+
+
+

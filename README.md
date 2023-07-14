@@ -92,6 +92,12 @@ Here is a breakdown of the fields in the ```wedding_invite.yml``` file:
 | build_args | A dictionary of build arguments that will be used to build the service.                          |
 
 # Using wedpy locally
+Prerequisites:
+
+1. Install docker desktop: ```https://www.docker.com/products/docker-desktop/```.
+
+2. Install python 3.11: ```https://www.python.org/downloads/```.
+
 Installing wedpy:
 
 1. Navigate to the root of your target repository in your terminal.
@@ -104,7 +110,7 @@ Installing wedpy:
 
 Prerequisites to running wedpy:
 
-1. Have docker desktop running in the background. You can install docker desktop here: ```https://www.docker.com/products/docker-desktop/```.
+1. Have docker desktop running in the background.
 
 2. Open your repository in your IDE. Create two empty folders. One titled ```sandbox``` and one titled ```post_office```.
 
